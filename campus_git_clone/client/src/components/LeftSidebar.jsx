@@ -1,0 +1,69 @@
+import React from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+
+const LeftSidebar = () => {
+    const { user, logout } = useAuth();
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        logout();
+        navigate('/login');
+    };
+
+    const navItems = [
+        { icon: '🏠', label: 'Home', path: '/' },
+        { icon: '🔍', label: 'Explore', path: '/explore' },
+        { icon: '👥', label: 'Groups', path: '/groups' },
+        { icon: '📅', label: 'Events', path: '/events' },
+        { icon: '🔔', label: 'Notifications', path: '/notifications' },
+        { icon: '👤', label: 'Profile', path: `/profile/${user?._id}` },
+    ];
+
+    return (
+        <aside className="hidden md:block w-64 sticky top-0 h-screen p-6 border-r border-gray-200 overflow-y-auto">
+            <div className="mb-8">
+                <h1 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-secondary-600">Campus Connect</h1>
+            </div>
+
+            <nav className="space-y-2 mb-8">
+                {navItems.map((item) => (
+                    <NavLink
+                        key={item.path}
+                        to={item.path}
+                        className={({ isActive }) => `
+                            flex items-center gap-3 px-4 py-3 rounded-xl font-medium transition-all duration-200
+                            ${isActive
+                                ? 'bg-primary-50 text-primary-700 shadow-sm'
+                                : 'text-gray-600 hover:bg-gray-50 hover:translate-x-1'
+                            }
+                        `}
+                    >
+                        <span className="text-xl">{item.icon}</span>
+                        <span>{item.label}</span>
+                    </NavLink>
+                ))}
+            </nav>
+
+            <div className="mt-auto pt-6 border-t border-gray-100">
+                <div className="flex items-center gap-3 mb-4 p-2 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer" onClick={() => navigate(`/profile/${user?._id}`)}>
+                    <div className="w-10 h-10 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center font-bold text-lg ring-2 ring-white shadow-sm">
+                        {user?.username?.[0]?.toUpperCase()}
+                    </div>
+                    <div className="flex-1 overflow-hidden">
+                        <h4 className="font-semibold text-gray-900 truncate">{user?.username}</h4>
+                        <p className="text-xs text-gray-500 truncate capitalize">{user?.role}</p>
+                    </div>
+                </div>
+                <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-red-600 bg-red-50 hover:bg-red-100 rounded-lg transition-colors"
+                >
+                    <span>🚪</span> Sign Out
+                </button>
+            </div>
+        </aside>
+    );
+};
+
+export default LeftSidebar;
