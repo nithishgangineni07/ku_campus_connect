@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import axios from '../api/axios';
 import Card from './ui/Card';
@@ -46,29 +47,82 @@ const PostCard = ({ post }) => {
         }
     };
 
+    const handleDelete = async (postId) => {
+        if (!window.confirm("Are you sure you want to delete this post?")) return;
+        try {
+            await axios.delete(`/posts/${postId}`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            // Ideally we should update the parent state or trigger a reload
+            // For now, let's just reload the page or hide the card (simplest for this architecture)
+            window.location.reload();
+        } catch (err) {
+            console.error("Error deleting post", err);
+        }
+    };
+
     return (
         <Card variant="default" className="w-full bg-white mb-6 overflow-hidden">
             <div className="p-4 border-b border-gray-100 flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                    {post.userAvatar ? (
-                        <img src={post.userAvatar} alt={post.username} className="w-10 h-10 rounded-full object-cover" />
-                    ) : (
-                        <div className="w-10 h-10 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center font-bold">
-                            {post.username?.[0]?.toUpperCase()}
-                        </div>
-                    )}
+                    <Link to={`/profile/${post.userId}`}>
+                        {post.userAvatar ? (
+                            <img src={post.userAvatar} alt={post.name} className="w-10 h-10 rounded-full object-cover hover:opacity-80 transition-opacity" />
+                        ) : (
+                            <div className="w-10 h-10 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center font-bold hover:bg-primary-200 transition-colors">
+                                {(post.name || post.rollNumber)?.[0]?.toUpperCase()}
+                            </div>
+                        )}
+                    </Link>
                     <div>
-                        <h4 className="font-semibold text-gray-900">{post.username}</h4>
+                        <Link to={`/profile/${post.userId}`} className="font-semibold text-gray-900 hover:text-primary-600 transition-colors">
+                            {post.name}
+                        </Link>
+                        {post.rollNumber && <span className="text-xs text-gray-500 ml-2">({post.rollNumber})</span>}
                         <p className="text-xs text-gray-500">{new Date(post.createdAt).toLocaleDateString(undefined, { dateStyle: 'long' })}</p>
                     </div>
                 </div>
-                <button className="text-gray-400 hover:text-gray-600">
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0zm7 0a1 1 0 11-2 0 1 1 0 012 0z"></path></svg>
-                </button>
+                {(user?._id === post.userId || user?.role === 'admin') && (
+                    <button
+                        onClick={() => handleDelete(post._id)}
+                        className="text-gray-400 hover:text-red-600 transition-colors"
+                        title="Delete Post"
+                    >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                    </button>
+                )}
             </div>
 
             <div className="p-4">
-                <p className="text-gray-700 leading-relaxed mb-4">{post.description}</p>
+                <div className="text-gray-700 leading-relaxed mb-4 whitespace-pre-wrap">
+                    {post.description && post.description.split(/(https?:\/\/[^\s]+)/g).map((part, index) => (
+                        part.match(/https?:\/\/[^\s]+/) ? (
+                            <a key={index} href={part} target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline break-all" onClick={(e) => e.stopPropagation()}>
+                                {part}
+                            </a>
+                        ) : (
+                            part
+                        )
+                    ))}
+                </div>
+                {post.filePath && (
+                    <div className="mb-4 p-3 bg-gray-50 border border-gray-200 rounded-lg flex items-center gap-3">
+                        <div className="p-2 bg-primary-100 rounded-lg text-primary-600">
+                            📄
+                        </div>
+                        <div className="flex-1 overflow-hidden">
+                            <p className="font-semibold text-sm truncate">{post.originalFileName || post.filePath}</p>
+                            <a
+                                href={`http://localhost:5000/assets/${post.filePath}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-xs text-primary-600 hover:underline"
+                            >
+                                Download / View
+                            </a>
+                        </div>
+                    </div>
+                )}
                 {post.picturePath && (
                     <div className="rounded-xl overflow-hidden mb-4 bg-gray-100">
                         <img
@@ -110,11 +164,14 @@ const PostCard = ({ post }) => {
                         {comments.map((comment, i) => (
                             <div key={i} className="flex gap-3">
                                 <div className="w-8 h-8 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center text-xs font-bold shrink-0">
-                                    {comment.username?.[0]?.toUpperCase()}
+                                    {(comment.name || comment.rollNumber)?.[0]?.toUpperCase()}
                                 </div>
                                 <div className="bg-white p-3 rounded-lg rounded-tl-none shadow-sm flex-1">
                                     <div className="flex justify-between items-start">
-                                        <span className="font-semibold text-sm text-gray-900">{comment.username}</span>
+                                        <div className="flex flex-col">
+                                            <span className="font-semibold text-sm text-gray-900">{comment.name || comment.rollNumber}</span>
+                                            {comment.rollNumber && <span className="text-xs text-gray-500">{comment.rollNumber}</span>}
+                                        </div>
                                         <span className="text-xs text-gray-400">Just now</span>
                                     </div>
                                     <p className="text-sm text-gray-700 mt-1">{comment.comment}</p>

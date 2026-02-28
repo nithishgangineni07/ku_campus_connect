@@ -1,12 +1,23 @@
 import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
-    username: {
+    name: {
         type: String,
         required: true,
+        min: 2,
+        max: 50
+    },
+    rollNumber: {
+        type: String,
         unique: true,
+        sparse: true,
         trim: true,
-        minlength: 3
+        minlength: 10,
+        maxlength: 10
+    },
+    department: {
+        type: Array, // Strings of department names
+        default: []
     },
     email: {
         type: String,
@@ -32,7 +43,20 @@ const userSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now
-    }
+    },
+    bio: {
+        type: String,
+        default: "",
+        max: 500
+    },
+    friends: {
+        type: Array,
+        default: []
+    },
+    location: String,
+    occupation: String,
+    resetPasswordToken: String,
+    resetPasswordExpires: Date
 });
 
 const User = mongoose.model('User', userSchema);

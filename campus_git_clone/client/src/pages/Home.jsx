@@ -1,28 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import PostFeed from '../components/PostFeed';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import LeftSidebar from '../components/LeftSidebar';
-import RightSidebar from '../components/RightSidebar';
+import MobileNavbar from '../components/MobileNavbar';
 
 const Home = () => {
     const { user } = useAuth();
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     if (user) {
         return (
             <div className="min-h-screen bg-slate-50">
-                {/* Mobile Header */}
-                <header className="md:hidden sticky top-0 z-30 bg-white/80 backdrop-blur-md border-b border-gray-200 px-4 py-3 flex justify-between items-center">
-                    <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-secondary-600">Campus Connect</h1>
-                    <div className="w-8 h-8 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center font-bold">
-                        {user.username?.[0]?.toUpperCase()}
-                    </div>
-                </header>
+                <MobileNavbar onOpenSidebar={() => setIsSidebarOpen(true)} />
 
                 <div className="flex max-w-7xl mx-auto">
-                    <LeftSidebar />
+                    <LeftSidebar isOpen={isSidebarOpen} onClose={() => setIsSidebarOpen(false)} />
 
                     {/* Main Feed Area */}
                     <main className="flex-1 min-w-0 p-4 md:p-8">
@@ -30,8 +25,6 @@ const Home = () => {
                             <PostFeed />
                         </div>
                     </main>
-
-                    <RightSidebar />
                 </div>
             </div>
         );

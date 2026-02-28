@@ -5,13 +5,18 @@ const postSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    username: {
+    rollNumber: {
+        type: String,
+    },
+    name: {
         type: String,
         required: true
     },
     userAvatar: String,
     description: String,
     picturePath: String,
+    filePath: String,
+    originalFileName: String,
     likes: {
         type: Map,
         of: Boolean,
@@ -19,6 +24,10 @@ const postSchema = new mongoose.Schema({
     comments: {
         type: Array,
         default: []
+    },
+    groupId: {
+        type: String,
+        default: null
     }
 }, { timestamps: true });
 

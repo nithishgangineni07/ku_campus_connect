@@ -12,19 +12,23 @@ import authRoutes from './routes/auth.js';
 import postRoutes from './routes/posts.js';
 import groupRoutes from './routes/groups.js';
 import eventRoutes from './routes/events.js';
+import userRoutes from './routes/users.js';
 
 app.use(cors());
 app.use(express.json());
 
 // Routes
 app.use('/auth', authRoutes);
+app.use('/users', userRoutes);
 app.use('/posts', postRoutes);
 app.use('/groups', groupRoutes);
 app.use('/events', eventRoutes);
+app.use('/assets', express.static('public/assets'));
 
 app.get('/', (req, res) => {
     res.send('Campus Connect API is running');
 });
+
 
 // Database connection
 mongoose.connect(process.env.MONGODB_URI)
@@ -35,3 +39,8 @@ mongoose.connect(process.env.MONGODB_URI)
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
+
+
+
+
+

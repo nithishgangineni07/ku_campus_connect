@@ -20,14 +20,16 @@ const EventSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
+        filePath: String,
+        originalFileName: String,
         creatorId: {
             type: String,
             required: true,
         },
-        attendees: {
-            type: Array, // Array of user IDs
-            default: [],
-        },
+        attendees: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+        }],
     },
     { timestamps: true }
 );

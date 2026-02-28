@@ -22,10 +22,10 @@ const GroupSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        members: {
-            type: Array,
-            default: [],
-        },
+        members: [{
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+        }],
     },
     { timestamps: true }
 );

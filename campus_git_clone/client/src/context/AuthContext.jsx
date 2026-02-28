@@ -4,7 +4,7 @@ import axios from '../api/axios';
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-    const [user, setUser] = useState(null);
+    const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null);
     const [token, setToken] = useState(localStorage.getItem('token'));
     const [loading, setLoading] = useState(true);
 
@@ -29,13 +29,16 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem('user', JSON.stringify(user));
     };
 
-    const register = async (username, email, password, role) => {
-        const response = await axios.post('/auth/register', { username, email, password, role });
-        const { token, user } = response.data;
+    const setAuth = (user, token) => {
         setToken(token);
         setUser(user);
         localStorage.setItem('token', token);
         localStorage.setItem('user', JSON.stringify(user));
+    };
+
+    const register = async (rollNumber, name, email, password, role, department) => {
+        await axios.post('/auth/register', { rollNumber, name, email, password, role, department });
+        // Do not auto-login
     };
 
     const logout = () => {
@@ -46,7 +49,7 @@ export const AuthProvider = ({ children }) => {
     };
 
     return (
-        <AuthContext.Provider value={{ user, token, login, register, logout, loading }}>
+        <AuthContext.Provider value={{ user, token, login, setAuth, register, logout, loading }}>
             {!loading && children}
         </AuthContext.Provider>
     );

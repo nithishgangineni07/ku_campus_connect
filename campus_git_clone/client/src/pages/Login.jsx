@@ -11,24 +11,24 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const { login } = useAuth();
-    const { addToast } = useToast();
+    const { showToast } = useToast();
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
             await login(email, password);
-            addToast('Welcome back!', 'success');
+            showToast('Welcome back!', 'success');
             navigate('/');
         } catch (err) {
-            addToast(err.response?.data?.msg || 'Failed to login', 'error');
+            showToast(err.response?.data?.msg || 'Failed to login', 'error');
         }
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-50 bg-[url('https://images.unsplash.com/photo-1541339907198-e021fc9d13f0?auto=format&fit=crop&q=80')] bg-cover bg-center">
+        <div className="min-h-screen flex items-center justify-center bg-gray-50 bg-[url('http://kucet.ac.in/img/sliders/KU_Home.jpg')] bg-cover bg-center">
             <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
-            <Card variant="glass" className="w-full max-w-md p-8 relative z-10 m-4">
+            <Card variant="glass" className="w-full  max-w-md p-8 relative z-10 m-4">
                 <div className="text-center mb-8">
                     <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-secondary-600">Welcome Back</h2>
                     <p className="text-gray-500 mt-2">Sign in to continue to Campus Connect</p>
@@ -54,7 +54,7 @@ const Login = () => {
                             required
                         />
                         <div className="flex justify-end">
-                            <Link to="#" className="text-sm text-primary-600 hover:text-primary-700 font-medium">
+                            <Link to="/forgot-password" className="text-sm text-primary-600 hover:text-primary-700 font-medium">
                                 Forgot password?
                             </Link>
                         </div>
@@ -74,6 +74,11 @@ const Login = () => {
                     Don't have an account?{' '}
                     <Link to="/register" className="font-semibold text-primary-600 hover:text-primary-700 hover:underline">
                         Create account
+                    </Link>
+                </div>
+                <div className="mt-6 text-center text-xs text-gray-400">
+                    <Link to="/admin-login" className="hover:text-primary-600 transition-colors">
+                        Admin Portal
                     </Link>
                 </div>
             </Card>
