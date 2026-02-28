@@ -79,11 +79,12 @@ const Profile = () => {
                             <div className="relative pt-10 px-4 flex flex-col items-center text-center">
                                 <div className="w-24 h-24 rounded-full bg-white p-1 shadow-lg mb-4">
                                     <div className="w-full h-full rounded-full bg-gray-200 flex items-center justify-center text-3xl font-bold text-gray-500">
-                                        {profileUser.rollNumber?.[0]?.toUpperCase()}
+                                        {(profileUser.name || profileUser.rollNumber)?.[0]?.toUpperCase()}
                                     </div>
                                 </div>
-                                <h2 className="text-2xl font-bold text-gray-900">{profileUser.rollNumber}</h2>
-                                <p className="text-primary-600 font-medium">{profileUser.role}</p>
+                                <h2 className="text-2xl font-bold text-gray-900">{profileUser.name}</h2>
+                                {profileUser.role === 'student' && <p className="text-gray-500">{profileUser.rollNumber}</p>}
+                                <p className="text-primary-600 font-medium capitalize">{profileUser.role}</p>
 
                                 {isEditing ? (
                                     <div className="mt-4 w-full max-w-md">

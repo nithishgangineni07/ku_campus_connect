@@ -16,7 +16,7 @@ const LeftSidebar = ({ isOpen, onClose }) => {
         { icon: '🔍', label: 'Explore', path: '/explore' },
         { icon: '👥', label: 'Groups', path: '/groups' },
         { icon: '📅', label: 'Events', path: '/events' },
-        { icon: '🔔', label: 'Notifications', path: '/notifications' },
+
         { icon: '👤', label: 'Profile', path: `/profile/${user?._id}` },
     ];
 
@@ -69,6 +69,11 @@ const LeftSidebar = ({ isOpen, onClose }) => {
                             <div className="flex-1 overflow-hidden">
                                 <h4 className="font-semibold text-gray-900 truncate">{user?.username || user?.rollNumber}</h4>
                                 <p className="text-xs text-gray-500 truncate capitalize">{user?.role}</p>
+                                {user?.department && (
+                                    <p className="text-xs text-gray-400 truncate" title={Array.isArray(user.department) ? user.department.join(', ') : user.department}>
+                                        {Array.isArray(user.department) ? user.department[0] + (user.department.length > 1 ? ` +${user.department.length - 1}` : '') : user.department}
+                                    </p>
+                                )}
                             </div>
                         </div>
                         <button

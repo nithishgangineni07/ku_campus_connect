@@ -36,13 +36,9 @@ export const AuthProvider = ({ children }) => {
         localStorage.setItem('user', JSON.stringify(user));
     };
 
-    const register = async (rollNumber, email, password, role) => {
-        const response = await axios.post('/auth/register', { rollNumber, email, password, role });
-        const { token, user } = response.data;
-        setToken(token);
-        setUser(user);
-        localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify(user));
+    const register = async (rollNumber, name, email, password, role, department) => {
+        await axios.post('/auth/register', { rollNumber, name, email, password, role, department });
+        // Do not auto-login
     };
 
     const logout = () => {

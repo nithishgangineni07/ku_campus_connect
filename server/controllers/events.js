@@ -40,7 +40,7 @@ export const deleteEvent = async (req, res) => {
         if (!event) return res.status(404).json({ message: "Event not found" });
 
         // Check ownership
-        if (req.user.id !== event.creatorId.toString() && req.user.role !== 'admin') {
+        if (req.user.id !== event.creatorId.toString() && req.user.role !== 'admin' && req.user.role !== 'faculty') {
             return res.status(403).json({ message: "Access denied." });
         }
 
@@ -56,9 +56,9 @@ export const getEvents = async (req, res) => {
     try {
         // Sort by date, ascending (soonest first)
         const events = await Event.find()
-        .populate('attendees','username email')
-        .populate('creatorId', 'username')
-        .sort({ date: 1 });
+            .populate('attendees', 'name email rollNumber')
+            .populate('creatorId', 'name')
+            .sort({ date: 1 });
 
         res.status(200).json(events);
     } catch (err) {
@@ -72,14 +72,27 @@ export const rsvpEvent = async (req, res) => {
         const { id } = req.params;
         const { userId } = req.body;
 
-        const event = await Event.findById(id);
-          if (!event) {
-            return res.status(404).json({ message: "Event not found" });
-          }
+        console.log("RSVP Request:", { id, userId });
 
-        const isAttending = event.attendees.some(
-         attendeeId => attendeeId.toString() === userId
+        const event = await Event.findById(id);
+        if (!event) {
+            return res.status(404).json({ message: "Event not found" });
+        }
+
+        console.log("Current Attendees (IDs):", event.attendees);
+
+        // Handle potential schema mismatch (if single ID instead of array)
+        let attendeesArr = Array.isArray(event.attendees) ? event.attendees : (event.attendees ? [event.attendees] : []);
+        // Force it to be an array in the document if it wasn't
+        if (!Array.isArray(event.attendees)) {
+            event.attendees = attendeesArr;
+        }
+
+        const isAttending = attendeesArr.some(
+            attendeeId => attendeeId.toString() === userId
         );
+
+        console.log("Is Attending:", isAttending);
 
         if (isAttending) {
             event.attendees = event.attendees.filter((attendeeId) => attendeeId.toString() !== userId);
@@ -88,14 +101,15 @@ export const rsvpEvent = async (req, res) => {
         }
 
         await event.save();
+        console.log("Updated Attendees:", event.attendees);
 
-         const updatedEvent = await Event.findById(id)
-          .populate("attendees", "username email")
-          .populate("creatorId", "username");
-
+        const updatedEvent = await Event.findById(id)
+            .populate("attendees", "name email rollNumber")
+            .populate("creatorId", "name");
 
         res.status(200).json(updatedEvent);
     } catch (err) {
+        console.error("RSVP Error:", err);
         res.status(404).json({ message: err.message });
     }
 };

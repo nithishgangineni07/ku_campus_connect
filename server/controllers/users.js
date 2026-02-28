@@ -44,3 +44,22 @@ export const updateUser = async (req, res) => {
         res.status(404).json({ message: err.message });
     }
 };
+
+/* SEARCH */
+export const searchUsers = async (req, res) => {
+    try {
+        const { query } = req.params;
+        // Search by username or rollNumber (case insensitive regex)
+        const users = await User.find({
+            $or: [
+                { username: { $regex: query, $options: "i" } }, // Assuming username field exists, need to verify Model
+                { rollNumber: { $regex: query, $options: "i" } },
+                { email: { $regex: query, $options: "i" } }
+            ]
+        }).select("-password"); // Exclude password
+
+        res.status(200).json(users);
+    } catch (err) {
+        res.status(404).json({ message: err.message });
+    }
+};

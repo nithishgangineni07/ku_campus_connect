@@ -67,17 +67,18 @@ const PostCard = ({ post }) => {
                 <div className="flex items-center gap-3">
                     <Link to={`/profile/${post.userId}`}>
                         {post.userAvatar ? (
-                            <img src={post.userAvatar} alt={post.username} className="w-10 h-10 rounded-full object-cover hover:opacity-80 transition-opacity" />
+                            <img src={post.userAvatar} alt={post.name} className="w-10 h-10 rounded-full object-cover hover:opacity-80 transition-opacity" />
                         ) : (
                             <div className="w-10 h-10 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center font-bold hover:bg-primary-200 transition-colors">
-                                {post.rollNumber?.[0]?.toUpperCase()}
+                                {(post.name || post.rollNumber)?.[0]?.toUpperCase()}
                             </div>
                         )}
                     </Link>
                     <div>
                         <Link to={`/profile/${post.userId}`} className="font-semibold text-gray-900 hover:text-primary-600 transition-colors">
-                            {post.rollNumber}
+                            {post.name}
                         </Link>
+                        {post.rollNumber && <span className="text-xs text-gray-500 ml-2">({post.rollNumber})</span>}
                         <p className="text-xs text-gray-500">{new Date(post.createdAt).toLocaleDateString(undefined, { dateStyle: 'long' })}</p>
                     </div>
                 </div>
@@ -93,7 +94,17 @@ const PostCard = ({ post }) => {
             </div>
 
             <div className="p-4">
-                <p className="text-gray-700 leading-relaxed mb-4">{post.description}</p>
+                <div className="text-gray-700 leading-relaxed mb-4 whitespace-pre-wrap">
+                    {post.description && post.description.split(/(https?:\/\/[^\s]+)/g).map((part, index) => (
+                        part.match(/https?:\/\/[^\s]+/) ? (
+                            <a key={index} href={part} target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline break-all" onClick={(e) => e.stopPropagation()}>
+                                {part}
+                            </a>
+                        ) : (
+                            part
+                        )
+                    ))}
+                </div>
                 {post.filePath && (
                     <div className="mb-4 p-3 bg-gray-50 border border-gray-200 rounded-lg flex items-center gap-3">
                         <div className="p-2 bg-primary-100 rounded-lg text-primary-600">
@@ -102,7 +113,7 @@ const PostCard = ({ post }) => {
                         <div className="flex-1 overflow-hidden">
                             <p className="font-semibold text-sm truncate">{post.originalFileName || post.filePath}</p>
                             <a
-                                href={`http://localhost:5000/assets/${post.filePath}`}
+                                href={`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/assets/${post.filePath}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-xs text-primary-600 hover:underline"
@@ -115,7 +126,7 @@ const PostCard = ({ post }) => {
                 {post.picturePath && (
                     <div className="rounded-xl overflow-hidden mb-4 bg-gray-100">
                         <img
-                            src={`http://localhost:5000/assets/${post.picturePath}`}
+                            src={`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/assets/${post.picturePath}`}
                             alt="Post content"
                             className="w-full h-auto object-cover max-h-96"
                         />
@@ -153,11 +164,14 @@ const PostCard = ({ post }) => {
                         {comments.map((comment, i) => (
                             <div key={i} className="flex gap-3">
                                 <div className="w-8 h-8 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center text-xs font-bold shrink-0">
-                                    {comment.rollNumber?.[0]?.toUpperCase()}
+                                    {(comment.name || comment.rollNumber)?.[0]?.toUpperCase()}
                                 </div>
                                 <div className="bg-white p-3 rounded-lg rounded-tl-none shadow-sm flex-1">
                                     <div className="flex justify-between items-start">
-                                        <span className="font-semibold text-sm text-gray-900">{comment.rollNumber}</span>
+                                        <div className="flex flex-col">
+                                            <span className="font-semibold text-sm text-gray-900">{comment.name || comment.rollNumber}</span>
+                                            {comment.rollNumber && <span className="text-xs text-gray-500">{comment.rollNumber}</span>}
+                                        </div>
                                         <span className="text-xs text-gray-400">Just now</span>
                                     </div>
                                     <p className="text-sm text-gray-700 mt-1">{comment.comment}</p>

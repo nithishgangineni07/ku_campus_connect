@@ -6,6 +6,7 @@ export const createPost = async (req, res) => {
     try {
         const { userId, description, groupId } = req.body;
         const user = await User.findById(userId);
+        if (!user) return res.status(404).json({ message: "User not found" });
 
         let picturePath = null;
         let filePath = null;
@@ -33,6 +34,7 @@ export const createPost = async (req, res) => {
 
         const newPost = new Post({
             userId,
+            name: user.name || "Campus Connect User",
             rollNumber: user.rollNumber,
             userAvatar: user.avatar,
             description,
@@ -48,6 +50,7 @@ export const createPost = async (req, res) => {
         const post = await Post.find().sort({ createdAt: -1 });
         res.status(201).json(post);
     } catch (err) {
+        console.error("DEBUG 409 CREATE POST ERROR:", err);
         res.status(409).json({ message: err.message });
     }
 };
@@ -62,7 +65,7 @@ export const deletePost = async (req, res) => {
 
         // Check if user is creator or admin
         // req.user is set by verifyToken middleware (decodes JWT)
-        if (req.user.id !== post.userId && req.user.role !== 'admin') {
+        if (req.user.id !== post.userId && req.user.role !== 'admin' && req.user.role !== 'faculty') {
             return res.status(403).json({ message: "Access denied. You can only delete your own posts." });
         }
 
@@ -144,6 +147,7 @@ export const commentPost = async (req, res) => {
 
         const newComment = {
             userId,
+            name: user.name,
             rollNumber: user.rollNumber,
             userAvatar: user.avatar,
             comment,

@@ -26,10 +26,10 @@ const EventSchema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        attendees: {
+        attendees: [{
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
-        },
+        }],
     },
     { timestamps: true }
 );
