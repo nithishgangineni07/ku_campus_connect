@@ -113,7 +113,7 @@ const Explore = () => {
                                                 {post.picturePath && (
                                                     <div className="h-48 overflow-hidden bg-gray-100">
                                                         <img
-                                                            src={`http://localhost:5000/assets/${post.picturePath}`}
+                                                            src={`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/assets/${post.picturePath}`}
                                                             alt="Post content"
                                                             className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
                                                         />

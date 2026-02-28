@@ -113,7 +113,7 @@ const PostCard = ({ post }) => {
                         <div className="flex-1 overflow-hidden">
                             <p className="font-semibold text-sm truncate">{post.originalFileName || post.filePath}</p>
                             <a
-                                href={`http://localhost:5000/assets/${post.filePath}`}
+                                href={`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/assets/${post.filePath}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="text-xs text-primary-600 hover:underline"
@@ -126,7 +126,7 @@ const PostCard = ({ post }) => {
                 {post.picturePath && (
                     <div className="rounded-xl overflow-hidden mb-4 bg-gray-100">
                         <img
-                            src={`http://localhost:5000/assets/${post.picturePath}`}
+                            src={`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/assets/${post.picturePath}`}
                             alt="Post content"
                             className="w-full h-auto object-cover max-h-96"
                         />
