@@ -14,14 +14,7 @@ import groupRoutes from './routes/groups.js';
 import eventRoutes from './routes/events.js';
 import userRoutes from './routes/users.js';
 
-app.use(cors({
-  origin: [
-    "http://localhost:5173",
-     "https://campus-connect-8258.onrender.com"
-  ],
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-  credentials: true
-}));
+app.use(cors());
 app.use(express.json());
 
 // Routes
