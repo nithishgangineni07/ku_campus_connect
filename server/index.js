@@ -17,6 +17,7 @@ import userRoutes from './routes/users.js';
 app.use(cors({
   origin: [
     "http://localhost:5173",
+     "https://campus-connect-8258.onrender.com"
   ],
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true
