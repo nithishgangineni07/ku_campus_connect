@@ -12,12 +12,12 @@ const LeftSidebar = ({ isOpen, onClose }) => {
     };
 
     const navItems = [
-        { icon: '🏠', label: 'Home', path: '/' },
-        { icon: '🔍', label: 'Explore', path: '/explore' },
-        { icon: '👥', label: 'Groups', path: '/groups' },
-        { icon: '📅', label: 'Events', path: '/events' },
+        { label: 'Home', path: '/' },
+        { label: 'Explore', path: '/explore' },
+        { label: 'Groups', path: '/groups' },
+        { label: 'Events', path: '/events' },
 
-        { icon: '👤', label: 'Profile', path: `/profile/${user?._id}` },
+        { label: 'Profile', path: `/profile/${user?._id}` },
     ];
 
     return (
