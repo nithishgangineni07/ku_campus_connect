@@ -8,7 +8,7 @@ const DesktopHeader = () => {
     if (!user) return null;
 
     return (
-        <header className="hidden md:flex sticky top-0 z-50 w-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 px-8 py-3 justify-between items-center">
+        <header className="hidden md:flex sticky top-0 z-100 w-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800 px-8 py-3 justify-between items-center">
             <div className="flex items-center gap-3">
                 <Link to="/">
                     <h1 className="text-2xl font-bold bg-clip-text z-50 text-transparent bg-gradient-to-r from-primary-600 to-secondary-600 dark:from-primary-400 dark:to-secondary-400">

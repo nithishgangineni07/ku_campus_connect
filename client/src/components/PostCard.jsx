@@ -179,7 +179,11 @@ const PostCard = ({ post }) => {
                                             <span className="font-semibold text-sm text-gray-900 dark:text-white">{comment.name || comment.rollNumber}</span>
                                             {comment.rollNumber && <span className="text-xs text-gray-500 dark:text-white">{comment.rollNumber}</span>}
                                         </div>
-                                        <span className="text-xs text-gray-400 dark:text-white">Just now</span>
+                                        <span className="text-xs text-gray-400 dark:text-white" title={comment.createdAt ? new Date(comment.createdAt).toLocaleString() : ''}>
+                                            {comment.createdAt
+                                                ? new Date(comment.createdAt).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })
+                                                : 'Just now'}
+                                        </span>
                                     </div>
                                     <p className="text-sm text-gray-700 dark:text-white mt-1">{comment.comment}</p>
                                 </div>

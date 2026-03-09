@@ -129,7 +129,8 @@ const GroupDetails = () => {
 
     const isMember = group.members.some(m => m._id === user._id);
     const isPending = group.pendingMembers && group.pendingMembers.some(m => m._id === user._id);
-    const canApprove = user._id === group.creatorId || ['admin', 'faculty', 'moderator'].includes(user.role);
+    const creatorId = group.creatorId?._id || group.creatorId;
+    const canApprove = user._id === creatorId?.toString() || ['admin', 'faculty', 'moderator'].includes(user.role);
     const canPost = isMember || ['admin', 'faculty', 'moderator'].includes(user.role);
 
     return (
