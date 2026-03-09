@@ -1,5 +1,6 @@
 import Post from "../models/Post.js";
 import User from "../models/User.js";
+import Group from "../models/Group.js";
 
 /* CREATE */
 export const createPost = async (req, res) => {
@@ -7,6 +8,22 @@ export const createPost = async (req, res) => {
         const { userId, description, groupId } = req.body;
         const user = await User.findById(userId);
         if (!user) return res.status(404).json({ message: "User not found" });
+
+        // RBAC: If it's a global post, must be admin, faculty, or moderator
+        if (!groupId && !['admin', 'faculty', 'moderator'].includes(user.role)) {
+            return res.status(403).json({ message: "Access denied. Students cannot create global posts." });
+        }
+
+        // RBAC: If it's a group post, user must be a member of the group, or an admin/faculty/moderator
+        if (groupId) {
+            const group = await Group.findById(groupId);
+            if (!group) return res.status(404).json({ message: "Group not found" });
+
+            const isMember = group.members.some(memberId => memberId.toString() === userId);
+            if (!isMember && !['admin', 'faculty', 'moderator'].includes(user.role)) {
+                return res.status(403).json({ message: "Access denied. You must be a member of this group to post." });
+            }
+        }
 
         let picturePath = null;
         let filePath = null;
@@ -36,6 +53,7 @@ export const createPost = async (req, res) => {
             userId,
             name: user.name || "Campus Connect User",
             rollNumber: user.rollNumber,
+            userRole: user.role,
             userAvatar: user.avatar,
             description,
             picturePath,
@@ -63,10 +81,18 @@ export const deletePost = async (req, res) => {
 
         if (!post) return res.status(404).json({ message: "Post not found" });
 
-        // Check if user is creator or admin
+        const postAuthor = await User.findById(post.userId);
+        const postAuthorRole = postAuthor ? postAuthor.role : 'student';
+
+        // Check if user is creator or admin/faculty/moderator
         // req.user is set by verifyToken middleware (decodes JWT)
-        if (req.user.id !== post.userId && req.user.role !== 'admin' && req.user.role !== 'faculty') {
+        if (req.user.id !== post.userId && !['admin', 'faculty', 'moderator'].includes(req.user.role)) {
             return res.status(403).json({ message: "Access denied. You can only delete your own posts." });
+        }
+
+        // If moderator is trying to delete, ensure they aren't deleting an admin's or faculty's post
+        if (req.user.role === 'moderator' && req.user.id !== post.userId && ['admin', 'faculty'].includes(postAuthorRole)) {
+            return res.status(403).json({ message: "Access denied. Moderators cannot delete admin or faculty posts." });
         }
 
         await Post.findByIdAndDelete(id);

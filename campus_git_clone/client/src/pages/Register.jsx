@@ -102,24 +102,24 @@ const Register = () => {
       <Card variant="glass" className="w-full max-w-xl p-8 relative z-10 m-4">
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-secondary-600">Join Campus Connect</h2>
-          <p className="text-gray-500 mt-2">Create your account to get started</p>
+          <p className="text-gray-500 dark:text-white mt-2">Create your account to get started</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Role</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-white mb-1">Role</label>
             <div className="relative">
               <select
                 name="role"
                 value={formData.role}
                 onChange={(e) => setFormData({ ...formData, role: e.target.value, department: [] })}
-                className="block w-full px-4 py-2 text-gray-900 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 appearance-none"
+                className="block w-full px-4 py-2 text-gray-900 dark:text-white bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 appearance-none"
               >
                 <option value="student">Student</option>
                 <option value="faculty">Faculty</option>
               </select>
               <div className="absolute inset-y-0 right-0 flex items-center px-2 pointer-events-none">
-                <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
+                <svg className="w-4 h-4 text-gray-500 dark:text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
               </div>
             </div>
           </div>
@@ -157,7 +157,7 @@ const Register = () => {
           />
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Department</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-white mb-2">Department</label>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-48 overflow-y-auto p-2 border border-gray-200 rounded-lg">
               {departments.map((dept) => (
                 <label key={dept} className="flex items-center space-x-2 cursor-pointer hover:bg-gray-50 p-1 rounded">
@@ -169,7 +169,7 @@ const Register = () => {
                     onChange={handleDepartmentChange}
                     className="text-primary-600 focus:ring-primary-500 border-gray-300 rounded"
                   />
-                  <span className="text-sm text-gray-700">{dept}</span>
+                  <span className="text-sm text-gray-700 dark:text-white">{dept}</span>
                 </label>
               ))}
             </div>
@@ -190,7 +190,7 @@ const Register = () => {
           </Button>
         </form>
 
-        <div className="mt-6 text-center text-sm text-gray-500">
+        <div className="mt-6 text-center text-sm text-gray-500 dark:text-white">
           Already have an account? <Link to="/login" className="font-semibold text-primary-600 hover:text-primary-700 hover:underline">Login</Link>
         </div>
       </Card>

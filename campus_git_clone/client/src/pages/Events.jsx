@@ -1,4 +1,5 @@
 import MobileNavbar from '../components/MobileNavbar';
+import DesktopHeader from '../components/DesktopHeader';
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext.jsx';
 import { useToast } from '../context/ToastContext.jsx'
@@ -107,7 +108,8 @@ const Events = () => {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50">
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
+            <DesktopHeader />
             <MobileNavbar onOpenSidebar={() => setIsSidebarOpen(true)} />
 
             <div className="flex max-w-7xl mx-auto">
@@ -116,7 +118,7 @@ const Events = () => {
                 <main className="flex-1 min-w-0 p-4 md:p-8">
                     <div className="max-w-4xl mx-auto">
                         <div className="flex justify-between items-center mb-6">
-                            <h2 className="text-2xl font-bold text-gray-900">Upcoming Events</h2>
+                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Upcoming Events</h2>
                             <Button onClick={() => setShowCreateModal(true)}>+ Create Event</Button>
                         </div>
 
@@ -137,30 +139,30 @@ const Events = () => {
                                 const attendees = Array.isArray(event.attendees) ? event.attendees : [];
 
                                 return (
-                                    <Card key={event._id} variant="default" className="p-0 flex flex-col md:flex-row overflow-hidden">
-                                        <div className="md:w-32 bg-primary-50 flex flex-col items-center justify-center p-4 border-b md:border-b-0 md:border-r border-primary-100">
-                                            <span className="text-sm font-bold text-primary-600 uppercase">
+                                    <Card key={event._id} variant="default" className="p-0 flex flex-col md:flex-row overflow-hidden border border-transparent dark:border-gray-700">
+                                        <div className="md:w-32 bg-primary-50 dark:bg-primary-900/40 flex flex-col items-center justify-center p-4 border-b md:border-b-0 md:border-r border-primary-100 dark:border-primary-900/50">
+                                            <span className="text-sm font-bold text-primary-600 dark:text-primary-400 uppercase">
                                                 {new Date(event.date).toLocaleString('default', { month: 'short' })}
                                             </span>
-                                            <span className="text-3xl font-bold text-gray-900">
+                                            <span className="text-3xl font-bold text-gray-900 dark:text-white">
                                                 {new Date(event.date).getDate()}
                                             </span>
-                                            <span className="text-xs text-gray-500">
+                                            <span className="text-xs text-gray-500 dark:text-white">
                                                 {new Date(event.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                                             </span>
                                         </div>
                                         <div className="flex-1 p-6 flex flex-col justify-between">
                                             <div>
                                                 <div className="flex justify-between items-start">
-                                                    <h3 className="text-xl font-bold text-gray-900 mb-1">{event.title}</h3>
+                                                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-1">{event.title}</h3>
                                                     <div className="flex items-center gap-2">
                                                         {attendees.some(a => a._id === user._id) && (
-                                                            <span className="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full font-medium">Attending</span>
+                                                            <span className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs px-2 py-1 rounded-full font-medium border border-transparent dark:border-green-800">Attending</span>
                                                         )}
                                                         {(user._id === event.creatorId || user.role === 'admin') && (
                                                             <button
                                                                 onClick={() => handleDeleteEvent(event._id)}
-                                                                className="text-gray-400 hover:text-red-600 transition-colors p-1"
+                                                                className="text-gray-400 dark:text-white hover:text-red-600 transition-colors p-1"
                                                                 title="Delete Event"
                                                             >
                                                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
@@ -168,17 +170,17 @@ const Events = () => {
                                                         )}
                                                     </div>
                                                 </div>
-                                                <p className="text-sm text-gray-500 mb-3 flex items-center gap-2">
+                                                <p className="text-sm text-gray-500 dark:text-white mb-3 flex items-center gap-2">
                                                     <span>📍</span> {event.location}
                                                 </p>
-                                                <p className="text-gray-600 text-sm mb-4">{event.description}</p>
+                                                <p className="text-gray-600 dark:text-white text-sm mb-4">{event.description}</p>
                                                 {event.filePath && (
                                                     <div className="mb-4">
                                                         <a
                                                             href={`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/assets/${event.filePath}`}
                                                             target="_blank"
                                                             rel="noopener noreferrer"
-                                                            className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-md text-xs font-medium hover:bg-gray-200 transition-colors"
+                                                            className="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-white rounded-md text-xs font-medium hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
                                                         >
                                                             <span>📎</span>
                                                             <span>{event.originalFileName || 'View Attachment'}</span>
@@ -193,9 +195,9 @@ const Events = () => {
                                                         setSelectedEventForAttendees({ ...event, attendees });
                                                         setShowAttendeesModal(true);
                                                     }}
-                                                    className="text-sm text-gray-500 hover:text-primary-600 hover:underline cursor-pointer focus:outline-none"
+                                                    className="text-sm text-gray-500 dark:text-white hover:text-primary-600 dark:hover:text-primary-400 hover:underline cursor-pointer focus:outline-none"
                                                 >
-                                                    <span className="font-semibold text-gray-900">{attendees.length}</span> people going
+                                                    <span className="font-semibold text-gray-900 dark:text-white">{attendees.length}</span> people going
                                                 </button>
                                                 <Button
                                                     size="sm"
@@ -217,8 +219,8 @@ const Events = () => {
             {/* Create Event Modal */}
             {showCreateModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-                    <Card className="w-full max-w-md p-6 bg-white">
-                        <h3 className="text-xl font-bold mb-4">Create New Event</h3>
+                    <Card className="w-full max-w-md p-6 bg-white dark:bg-slate-800 border dark:border-gray-700">
+                        <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">Create New Event</h3>
                         <form onSubmit={handleCreateEvent} className="space-y-4">
                             <Input
                                 label="Event Title"
@@ -227,9 +229,9 @@ const Events = () => {
                                 required
                             />
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                                <label className="block text-sm font-medium text-gray-700 dark:text-white mb-1">Description</label>
                                 <textarea
-                                    className="w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
+                                    className="w-full rounded-lg border-gray-300 dark:border-gray-600 bg-white dark:bg-slate-800 text-gray-900 dark:text-white shadow-sm focus:border-primary-500 focus:ring-primary-500"
                                     rows="3"
                                     value={description}
                                     onChange={(e) => setDescription(e.target.value)}
@@ -250,8 +252,8 @@ const Events = () => {
                                 required
                             />
                             <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-2">Attachment (Optional)</label>
-                                <label className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 cursor-pointer">
+                                <label className="block text-sm font-medium text-gray-700 dark:text-white mb-2">Attachment (Optional)</label>
+                                <label className="inline-flex items-center gap-2 px-4 py-2 bg-white dark:bg-slate-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm text-sm font-medium text-gray-700 dark:text-white hover:bg-gray-50 dark:hover:bg-slate-600 cursor-pointer transition-colors">
                                     <span>📎</span>
                                     <span>{file ? file.name : 'Choose File'}</span>
                                     <input
@@ -274,12 +276,12 @@ const Events = () => {
             {/* View Attendees Modal */}
             {showAttendeesModal && selectedEventForAttendees && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-                    <Card className="w-full max-w-md p-6 bg-white max-h-[80vh] flex flex-col">
+                    <Card className="w-full max-w-md p-6 bg-white dark:bg-slate-800 border dark:border-gray-700 max-h-[80vh] flex flex-col">
                         <div className="flex justify-between items-center mb-4">
-                            <h3 className="text-xl font-bold">Attendees</h3>
+                            <h3 className="text-xl font-bold text-gray-900 dark:text-white">Attendees</h3>
                             <button
                                 onClick={() => setShowAttendeesModal(false)}
-                                className="text-gray-400 hover:text-gray-600"
+                                className="text-gray-400 dark:text-white hover:text-gray-600 dark:text-white dark:hover:text-gray-200 dark:text-white"
                             >
                                 ✕
                             </button>
@@ -287,24 +289,24 @@ const Events = () => {
                         <div className="overflow-y-auto flex-1 space-y-3">
                             {selectedEventForAttendees.attendees.length > 0 ? (
                                 selectedEventForAttendees.attendees.map((attendee) => (
-                                    <div key={attendee._id} className="flex items-center gap-3 p-2 hover:bg-gray-50 rounded-lg">
-                                        <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 font-bold">
+                                    <div key={attendee._id} className="flex items-center gap-3 p-2 hover:bg-gray-50 dark:hover:bg-slate-700 rounded-lg transition-colors">
+                                        <div className="w-10 h-10 rounded-full bg-primary-100 dark:bg-primary-900/50 flex items-center justify-center text-primary-600 dark:text-primary-400 font-bold border border-transparent dark:border-primary-800">
                                             {(attendee.name || attendee.username) ? (attendee.name || attendee.username)[0].toUpperCase() : '?'}
                                         </div>
                                         <div>
-                                            <p className="font-semibold text-gray-900">
+                                            <p className="font-semibold text-gray-900 dark:text-white">
                                                 {attendee.name || attendee.username || attendee.email || 'Unknown User'}
-                                                {attendee.rollNumber && <span className="text-gray-500 font-normal ml-1">({attendee.rollNumber})</span>}
+                                                {attendee.rollNumber && <span className="text-gray-500 dark:text-white font-normal ml-1">({attendee.rollNumber})</span>}
                                             </p>
-                                            <p className="text-sm text-gray-500">{attendee.email || ''}</p>
+                                            <p className="text-sm text-gray-500 dark:text-white">{attendee.email || ''}</p>
                                         </div>
                                     </div>
                                 ))
                             ) : (
-                                <p className="text-center text-gray-500 py-4">No one has RSVP'd yet.</p>
+                                <p className="text-center text-gray-500 dark:text-white py-4">No one has RSVP'd yet.</p>
                             )}
                         </div>
-                        <div className="flex justify-end mt-6 pt-4 border-t border-gray-100">
+                        <div className="flex justify-end mt-6 pt-4 border-t border-gray-100 dark:border-gray-700">
                             <Button onClick={() => setShowAttendeesModal(false)}>Close</Button>
                         </div>
                     </Card>

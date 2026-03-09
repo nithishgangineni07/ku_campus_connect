@@ -6,6 +6,11 @@ export const createGroup = async (req, res) => {
     try {
         const { name, description, privacy, creatorId } = req.body;
 
+        // RBAC: Only Admin, Faculty, or Moderator can create groups
+        if (!['admin', 'faculty', 'moderator'].includes(req.user.role)) {
+            return res.status(403).json({ message: "Access denied. You do not have permission to create a group." });
+        }
+
         const newGroup = new Group({
             name,
             description,
@@ -25,7 +30,8 @@ export const createGroup = async (req, res) => {
 export const getGroups = async (req, res) => {
     try {
         const groups = await Group.find()
-            .populate("members", "username rollNumber email")
+            .populate("members", "username rollNumber email name avatar")
+            .populate("pendingMembers", "username rollNumber email name avatar")
             .populate("creatorId", "username");
         res.status(200).json(groups);
     } catch (err) {
@@ -37,7 +43,8 @@ export const getGroup = async (req, res) => {
     try {
         const { id } = req.params;
         const group = await Group.findById(id)
-            .populate("members", "username rollNumber email")
+            .populate("members", "username rollNumber email name avatar")
+            .populate("pendingMembers", "username rollNumber email name avatar")
             .populate("creatorId", "username");
         res.status(200).json(group);
     } catch (err) {
@@ -53,19 +60,24 @@ export const joinGroup = async (req, res) => {
 
         const group = await Group.findById(id);
         const isMember = group.members.some(memberId => memberId.toString() === userId);
+        const isPending = group.pendingMembers && group.pendingMembers.some(memberId => memberId.toString() === userId);
 
         if (isMember) {
             group.members = group.members.filter((memberId) => memberId.toString() !== userId);
+        } else if (isPending) {
+            group.pendingMembers = group.pendingMembers.filter((memberId) => memberId.toString() !== userId);
         } else {
-            group.members.push(userId);
+            if (!group.pendingMembers) group.pendingMembers = [];
+            group.pendingMembers.push(userId);
         }
 
         const updatedGroup = await Group.findByIdAndUpdate(
             id,
-            { members: group.members },
+            { members: group.members, pendingMembers: group.pendingMembers },
             { new: true }
         )
-            .populate("members", "username rollNumber email")
+            .populate("members", "username rollNumber email name avatar")
+            .populate("pendingMembers", "username rollNumber email name avatar")
             .populate("creatorId", "username");
 
         res.status(200).json(updatedGroup);
@@ -117,7 +129,64 @@ export const removeMember = async (req, res) => {
         await group.save();
 
         const updatedGroup = await Group.findById(id)
-            .populate("members", "username rollNumber email")
+            .populate("members", "username rollNumber email name avatar")
+            .populate("pendingMembers", "username rollNumber email name avatar")
+            .populate("creatorId", "username");
+
+        res.status(200).json(updatedGroup);
+    } catch (err) {
+        res.status(404).json({ message: err.message });
+    }
+};
+
+/* APPROVE MEMBER */
+export const approveMember = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { userId } = req.body;
+
+        const group = await Group.findById(id);
+        if (!group) return res.status(404).json({ message: "Group not found" });
+
+        if (req.user.id !== group.creatorId.toString() && !['admin', 'faculty', 'moderator'].includes(req.user.role)) {
+            return res.status(403).json({ message: "Access denied. Only admins, faculty, or moderators can approve members." });
+        }
+
+        group.pendingMembers = group.pendingMembers.filter((memberId) => memberId.toString() !== userId);
+        group.members.push(userId);
+
+        await group.save();
+
+        const updatedGroup = await Group.findById(id)
+            .populate("members", "username rollNumber email name avatar")
+            .populate("pendingMembers", "username rollNumber email name avatar")
+            .populate("creatorId", "username");
+
+        res.status(200).json(updatedGroup);
+    } catch (err) {
+        res.status(404).json({ message: err.message });
+    }
+};
+
+/* REJECT MEMBER */
+export const rejectMember = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { userId } = req.body;
+
+        const group = await Group.findById(id);
+        if (!group) return res.status(404).json({ message: "Group not found" });
+
+        if (req.user.id !== group.creatorId.toString() && !['admin', 'faculty', 'moderator'].includes(req.user.role)) {
+            return res.status(403).json({ message: "Access denied. Only admins, faculty, or moderators can reject members." });
+        }
+
+        group.pendingMembers = group.pendingMembers.filter((memberId) => memberId.toString() !== userId);
+        await group.save();
+
+        const updatedGroup = await Group.findById(id)
+            .populate("members", "username rollNumber email name avatar")
+            .populate("pendingMembers", "username rollNumber email name avatar")
             .populate("creatorId", "username");
 
         res.status(200).json(updatedGroup);

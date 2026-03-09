@@ -54,7 +54,7 @@ const CreatePost = ({ onPostCreated }) => {
                         onChange={(e) => setDescription(e.target.value)}
                     />
                     {file && (
-                        <div className="text-sm text-gray-500 bg-gray-50 px-3 py-1 rounded-md inline-flex items-center gap-2">
+                        <div className="text-sm text-gray-500 dark:text-white bg-gray-50 px-3 py-1 rounded-md inline-flex items-center gap-2">
                             <span>📎 {file.name}</span>
                             <button onClick={() => setFile(null)} className="text-red-500 hover:text-red-700">✕</button>
                         </div>
@@ -62,7 +62,7 @@ const CreatePost = ({ onPostCreated }) => {
                 </div>
             </div>
             <div className="flex justify-between items-center border-t pt-3">
-                <label className="flex items-center gap-2 text-gray-500 hover:text-primary-600 cursor-pointer transition-colors px-3 py-2 rounded-lg hover:bg-gray-50">
+                <label className="flex items-center gap-2 text-gray-500 dark:text-white hover:text-primary-600 cursor-pointer transition-colors px-3 py-2 rounded-lg hover:bg-gray-50">
                     <span>📎</span>
                     <span className="text-sm font-medium">Attach File</span>
                     <input

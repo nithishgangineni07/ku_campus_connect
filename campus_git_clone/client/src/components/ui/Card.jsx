@@ -2,9 +2,9 @@ import React from 'react';
 
 const Card = ({ children, className = '', variant = 'default', ...props }) => {
     const variants = {
-        default: "bg-white border border-gray-100 shadow-md hover:shadow-lg",
-        glass: "glass-card",
-        flat: "bg-gray-50 border border-gray-200"
+        default: "bg-white dark:bg-slate-800 border border-gray-100 dark:border-gray-700 shadow-md hover:shadow-lg dark:hover:shadow-slate-900/50 text-gray-900 dark:text-white",
+        glass: "glass-card dark:bg-slate-800/80 dark:border-gray-700 text-gray-900 dark:text-white",
+        flat: "bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white"
     };
 
     return (

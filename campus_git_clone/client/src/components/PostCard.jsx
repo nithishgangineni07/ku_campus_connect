@@ -62,8 +62,8 @@ const PostCard = ({ post }) => {
     };
 
     return (
-        <Card variant="default" className="w-full bg-white mb-6 overflow-hidden">
-            <div className="p-4 border-b border-gray-100 flex items-center justify-between">
+        <Card variant="default" className="w-full mb-6 overflow-hidden">
+            <div className="p-4 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
                 <div className="flex items-center gap-3">
                     <Link to={`/profile/${post.userId}`}>
                         {post.userAvatar ? (
@@ -75,17 +75,24 @@ const PostCard = ({ post }) => {
                         )}
                     </Link>
                     <div>
-                        <Link to={`/profile/${post.userId}`} className="font-semibold text-gray-900 hover:text-primary-600 transition-colors">
-                            {post.name}
-                        </Link>
-                        {post.rollNumber && <span className="text-xs text-gray-500 ml-2">({post.rollNumber})</span>}
-                        <p className="text-xs text-gray-500">{new Date(post.createdAt).toLocaleDateString(undefined, { dateStyle: 'long' })}</p>
+                        <div className="flex items-center gap-2">
+                            <Link to={`/profile/${post.userId}`} className="font-semibold text-gray-900 dark:text-white hover:text-primary-600 dark:hover:text-primary-400 transition-colors">
+                                {post.name}
+                            </Link>
+                            {post.rollNumber && <span className="text-xs text-gray-500 dark:text-white">({post.rollNumber})</span>}
+                            {['admin', 'faculty'].includes(post.userRole) && (
+                                <span className="px-2 py-0.5 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-[10px] font-bold uppercase tracking-wider border border-green-200 dark:border-green-800">
+                                    Official
+                                </span>
+                            )}
+                        </div>
+                        <p className="text-xs text-gray-500 dark:text-white mt-0.5">{new Date(post.createdAt).toLocaleDateString(undefined, { dateStyle: 'long' })}</p>
                     </div>
                 </div>
-                {(user?._id === post.userId || user?.role === 'admin') && (
+                {(user?._id === post.userId || ['admin', 'faculty', 'moderator'].includes(user?.role)) && (
                     <button
                         onClick={() => handleDelete(post._id)}
-                        className="text-gray-400 hover:text-red-600 transition-colors"
+                        className="text-gray-400 dark:text-white hover:text-red-600 transition-colors"
                         title="Delete Post"
                     >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
@@ -94,10 +101,10 @@ const PostCard = ({ post }) => {
             </div>
 
             <div className="p-4">
-                <div className="text-gray-700 leading-relaxed mb-4 whitespace-pre-wrap">
+                <div className="text-gray-700 dark:text-white leading-relaxed mb-4 whitespace-pre-wrap">
                     {post.description && post.description.split(/(https?:\/\/[^\s]+)/g).map((part, index) => (
                         part.match(/https?:\/\/[^\s]+/) ? (
-                            <a key={index} href={part} target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline break-all" onClick={(e) => e.stopPropagation()}>
+                            <a key={index} href={part} target="_blank" rel="noopener noreferrer" className="text-primary-600 dark:text-primary-400 hover:underline break-all" onClick={(e) => e.stopPropagation()}>
                                 {part}
                             </a>
                         ) : (
@@ -106,17 +113,17 @@ const PostCard = ({ post }) => {
                     ))}
                 </div>
                 {post.filePath && (
-                    <div className="mb-4 p-3 bg-gray-50 border border-gray-200 rounded-lg flex items-center gap-3">
-                        <div className="p-2 bg-primary-100 rounded-lg text-primary-600">
+                    <div className="mb-4 p-3 bg-gray-50 dark:bg-slate-900/50 border border-gray-200 dark:border-gray-700 rounded-lg flex items-center gap-3">
+                        <div className="p-2 bg-primary-100 dark:bg-primary-900/50 rounded-lg text-primary-600 dark:text-primary-400">
                             📄
                         </div>
                         <div className="flex-1 overflow-hidden">
-                            <p className="font-semibold text-sm truncate">{post.originalFileName || post.filePath}</p>
+                            <p className="font-semibold text-sm truncate dark:text-white">{post.originalFileName || post.filePath}</p>
                             <a
                                 href={`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/assets/${post.filePath}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="text-xs text-primary-600 hover:underline"
+                                className="text-xs text-primary-600 dark:text-primary-400 hover:underline"
                             >
                                 Download / View
                             </a>
@@ -124,7 +131,7 @@ const PostCard = ({ post }) => {
                     </div>
                 )}
                 {post.picturePath && (
-                    <div className="rounded-xl overflow-hidden mb-4 bg-gray-100">
+                    <div className="rounded-xl overflow-hidden mb-4 bg-gray-100 dark:bg-slate-900">
                         <img
                             src={`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000'}/assets/${post.picturePath}`}
                             alt="Post content"
@@ -134,11 +141,11 @@ const PostCard = ({ post }) => {
                 )}
             </div>
 
-            <div className="px-4 py-3 bg-gray-50 border-t border-gray-100 flex items-center justify-between">
+            <div className="px-4 py-3 bg-gray-50 dark:bg-slate-800/50 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between">
                 <div className="flex items-center gap-4">
                     <button
                         onClick={handleLike}
-                        className={`flex items-center gap-2 text-sm font-medium transition-colors ${isLiked ? 'text-red-500' : 'text-gray-500 hover:text-red-500'
+                        className={`flex items-center gap-2 text-sm font-medium transition-colors ${isLiked ? 'text-red-500' : 'text-gray-500 dark:text-white hover:text-red-500 dark:hover:text-red-500'
                             }`}
                     >
                         <svg className={`w-5 h-5 ${isLiked ? 'fill-current' : 'stroke-current fill-none'}`} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
@@ -146,35 +153,35 @@ const PostCard = ({ post }) => {
                     </button>
                     <button
                         onClick={() => setShowComments(!showComments)}
-                        className="flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-blue-500 transition-colors"
+                        className="flex items-center gap-2 text-sm font-medium text-gray-500 dark:text-white hover:text-blue-500 dark:hover:text-blue-400 transition-colors"
                     >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M19 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
                         <span>{comments.length}</span>
                     </button>
                 </div>
-                <button className="text-gray-400 hover:text-gray-600">
+                <button className="text-gray-400 dark:text-white hover:text-gray-600 dark:text-white">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"></path></svg>
                 </button>
             </div>
 
             {/* Comments Section */}
             {showComments && (
-                <div className="bg-gray-50 p-4 border-t border-gray-100">
+                <div className="bg-gray-50 dark:bg-slate-900/30 p-4 border-t border-gray-100 dark:border-gray-700">
                     <div className="space-y-4 mb-4 max-h-60 overflow-y-auto">
                         {comments.map((comment, i) => (
                             <div key={i} className="flex gap-3">
-                                <div className="w-8 h-8 rounded-full bg-primary-100 text-primary-600 flex items-center justify-center text-xs font-bold shrink-0">
+                                <div className="w-8 h-8 rounded-full bg-primary-100 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400 flex items-center justify-center text-xs font-bold shrink-0">
                                     {(comment.name || comment.rollNumber)?.[0]?.toUpperCase()}
                                 </div>
-                                <div className="bg-white p-3 rounded-lg rounded-tl-none shadow-sm flex-1">
+                                <div className="bg-white dark:bg-slate-800 p-3 rounded-lg rounded-tl-none shadow-sm flex-1 border border-transparent dark:border-gray-700">
                                     <div className="flex justify-between items-start">
                                         <div className="flex flex-col">
-                                            <span className="font-semibold text-sm text-gray-900">{comment.name || comment.rollNumber}</span>
-                                            {comment.rollNumber && <span className="text-xs text-gray-500">{comment.rollNumber}</span>}
+                                            <span className="font-semibold text-sm text-gray-900 dark:text-white">{comment.name || comment.rollNumber}</span>
+                                            {comment.rollNumber && <span className="text-xs text-gray-500 dark:text-white">{comment.rollNumber}</span>}
                                         </div>
-                                        <span className="text-xs text-gray-400">Just now</span>
+                                        <span className="text-xs text-gray-400 dark:text-white">Just now</span>
                                     </div>
-                                    <p className="text-sm text-gray-700 mt-1">{comment.comment}</p>
+                                    <p className="text-sm text-gray-700 dark:text-white mt-1">{comment.comment}</p>
                                 </div>
                             </div>
                         ))}
@@ -185,7 +192,7 @@ const PostCard = ({ post }) => {
                             placeholder="Write a comment..."
                             value={newComment}
                             onChange={(e) => setNewComment(e.target.value)}
-                            className="bg-white"
+                            className="bg-white dark:bg-slate-800"
                         />
                         <Button type="submit" size="md" disabled={!newComment.trim()} isLoading={isLoading}>
                             Post

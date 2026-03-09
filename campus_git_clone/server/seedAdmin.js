@@ -7,8 +7,12 @@ dotenv.config();
 
 const seedAdmin = async () => {
     try {
+        if (!process.env.MONGODB_URI) {
+            throw new Error("MONGODB_URI is not defined in environment variables");
+        }
+
         await mongoose.connect(process.env.MONGODB_URI);
-        console.log("MongoDB connected");
+        console.log("✅ MongoDB connected");
 
         const adminEmail = "admin@campusconnect.com";
         const adminPassword = "adminpassword123";
@@ -17,31 +21,36 @@ const seedAdmin = async () => {
         const existingAdmin = await User.findOne({ email: adminEmail });
 
         if (existingAdmin) {
-            console.log("Admin already exists. Updating role...");
+            console.log("⚠ Admin already exists. Ensuring role is admin...");
+
             existingAdmin.role = "admin";
             await existingAdmin.save();
-            console.log("Admin updated");
+
+            console.log("✅ Admin role verified/updated");
         } else {
-            const salt = await bcrypt.genSalt(10);
-            const hashedPassword = await bcrypt.hash(adminPassword, salt);
+            const hashedPassword = await bcrypt.hash(adminPassword, 10);
 
             const newAdmin = new User({
-                username: "Admin",
+                name: "Admin",
                 email: adminEmail,
                 password: hashedPassword,
                 rollNumber: adminRoll,
-                role: "admin"
+                role: "admin",
             });
 
             await newAdmin.save();
-            console.log("Admin user seeded successfully");
-            console.log(`Email: ${adminEmail}`);
-            console.log(`Password: ${adminPassword}`);
+
+            console.log("✅ Admin user seeded successfully");
+            console.log(`📧 Email: ${adminEmail}`);
+            console.log(`🔑 Password: ${adminPassword}`);
         }
 
+        await mongoose.disconnect();
+        console.log("🔌 MongoDB disconnected");
         process.exit(0);
+
     } catch (err) {
-        console.error("Error seeding admin:", err);
+        console.error("❌ Error seeding admin:", err.message);
         process.exit(1);
     }
 };

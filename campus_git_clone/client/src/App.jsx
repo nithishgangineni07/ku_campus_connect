@@ -15,33 +15,36 @@ import Events from './pages/Events.jsx';
 
 import { AuthProvider } from './context/AuthContext';
 import { ToastProvider } from './context/ToastContext';
+import { ThemeProvider } from './context/ThemeContext';
 
 
 function App() {
   return (
 
-    <ToastProvider>
-      <AuthProvider>
-        <Router>
-          <div className="app-container">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/faculty-login" element={<FacultyLogin />} />
-              <Route path="/forgot-password" element={<ForgotPassword />} />
-              <Route path="/reset-password/:token" element={<ResetPassword />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/admin-login" element={<AdminLogin />} />
-              <Route path="/profile/:userId" element={<Profile />} />
-              <Route path="/explore" element={<Explore />} />
-              <Route path="/groups" element={<Groups />} />
-              <Route path="/groups/:groupId" element={<GroupDetails />} />
-              <Route path="/events" element={<Events />} />
-            </Routes>
-          </div>
-        </Router>
-      </AuthProvider>
-    </ToastProvider >
+    <ThemeProvider>
+      <ToastProvider>
+        <AuthProvider>
+          <Router>
+            <div className="app-container">
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/faculty-login" element={<FacultyLogin />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/reset-password/:token" element={<ResetPassword />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/admin-login" element={<AdminLogin />} />
+                <Route path="/profile/:userId" element={<Profile />} />
+                <Route path="/explore" element={<Explore />} />
+                <Route path="/groups" element={<Groups />} />
+                <Route path="/groups/:groupId" element={<GroupDetails />} />
+                <Route path="/events" element={<Events />} />
+              </Routes>
+            </div>
+          </Router>
+        </AuthProvider>
+      </ToastProvider >
+    </ThemeProvider>
   );
 }
 

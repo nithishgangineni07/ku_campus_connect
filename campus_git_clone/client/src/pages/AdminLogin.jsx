@@ -45,7 +45,7 @@ const AdminLogin = () => {
                     <h1 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-red-600 to-primary-600">
                         Admin Portal
                     </h1>
-                    <p className="text-gray-500 mt-2">Manage Campus Connect</p>
+                    <p className="text-gray-500 dark:text-white mt-2">Manage Campus Connect</p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">

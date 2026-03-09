@@ -9,6 +9,7 @@ import PostCard from '../components/PostCard'; // Import PostCard
 import Input from '../components/ui/Input'; // Import Input
 import { useToast } from '../context/ToastContext';
 import MobileNavbar from '../components/MobileNavbar';
+import DesktopHeader from '../components/DesktopHeader';
 
 const Profile = () => {
     const { userId } = useParams();
@@ -65,7 +66,8 @@ const Profile = () => {
     const isOwnProfile = currentUser?._id === userId;
 
     return (
-        <div className="min-h-screen bg-slate-50">
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
+            <DesktopHeader />
             <MobileNavbar onOpenSidebar={() => setIsSidebarOpen(true)} />
 
             <div className="flex max-w-7xl mx-auto">
@@ -78,12 +80,12 @@ const Profile = () => {
                             <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-r from-primary-400 to-secondary-400"></div>
                             <div className="relative pt-10 px-4 flex flex-col items-center text-center">
                                 <div className="w-24 h-24 rounded-full bg-white p-1 shadow-lg mb-4">
-                                    <div className="w-full h-full rounded-full bg-gray-200 flex items-center justify-center text-3xl font-bold text-gray-500">
+                                    <div className="w-full h-full rounded-full bg-gray-200 flex items-center justify-center text-3xl font-bold text-gray-500 dark:text-white">
                                         {(profileUser.name || profileUser.rollNumber)?.[0]?.toUpperCase()}
                                     </div>
                                 </div>
-                                <h2 className="text-2xl font-bold text-gray-900">{profileUser.name}</h2>
-                                {profileUser.role === 'student' && <p className="text-gray-500">{profileUser.rollNumber}</p>}
+                                <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{profileUser.name}</h2>
+                                {profileUser.role === 'student' && <p className="text-gray-500 dark:text-white">{profileUser.rollNumber}</p>}
                                 <p className="text-primary-600 font-medium capitalize">{profileUser.role}</p>
 
                                 {isEditing ? (
@@ -100,21 +102,21 @@ const Profile = () => {
                                         </div>
                                     </div>
                                 ) : (
-                                    <p className="text-gray-600 mt-2 max-w-md">{profileUser.bio || "No bio yet."}</p>
+                                    <p className="text-gray-600 dark:text-white mt-2 max-w-md">{profileUser.bio || "No bio yet."}</p>
                                 )}
 
                                 <div className="flex gap-6 mt-6 mb-6">
                                     <div className="text-center">
-                                        <div className="font-bold text-gray-900">{userPosts.length}</div>
-                                        <div className="text-xs text-gray-500">Posts</div>
+                                        <div className="font-bold text-gray-900 dark:text-white">{userPosts.length}</div>
+                                        <div className="text-xs text-gray-500 dark:text-white">Posts</div>
                                     </div>
                                     <div className="text-center">
-                                        <div className="font-bold text-gray-900">{profileUser.followers || 0}</div>
-                                        <div className="text-xs text-gray-500">Followers</div>
+                                        <div className="font-bold text-gray-900 dark:text-white">{profileUser.followers || 0}</div>
+                                        <div className="text-xs text-gray-500 dark:text-white">Followers</div>
                                     </div>
                                     <div className="text-center">
-                                        <div className="font-bold text-gray-900">{profileUser.following || 0}</div>
-                                        <div className="text-xs text-gray-500">Following</div>
+                                        <div className="font-bold text-gray-900 dark:text-white">{profileUser.following || 0}</div>
+                                        <div className="text-xs text-gray-500 dark:text-white">Following</div>
                                     </div>
                                 </div>
 
@@ -134,7 +136,7 @@ const Profile = () => {
                                     onClick={() => setActiveTab(tab.toLowerCase())}
                                     className={`flex-1 py-3 text-sm font-medium border-b-2 transition-colors ${activeTab === tab.toLowerCase()
                                         ? 'border-primary-500 text-primary-600'
-                                        : 'border-transparent text-gray-500 hover:text-gray-700'
+                                        : 'border-transparent text-gray-500 dark:text-white hover:text-gray-700 dark:text-white'
                                         }`}
                                 >
                                     {tab}
@@ -151,12 +153,12 @@ const Profile = () => {
                                             <PostCard key={post._id} post={post} />
                                         ))
                                     ) : (
-                                        <div className="text-center text-gray-500 py-8">No posts yet.</div>
+                                        <div className="text-center text-gray-500 dark:text-white py-8">No posts yet.</div>
                                     )}
                                 </div>
                             )}
                             {activeTab === 'about' && (
-                                <div className="text-center text-gray-500 py-8">
+                                <div className="text-center text-gray-500 dark:text-white py-8">
                                     <p>Email: {profileUser.email}</p>
                                     <p>Joined: {new Date(profileUser.createdAt).toLocaleDateString()}</p>
                                 </div>

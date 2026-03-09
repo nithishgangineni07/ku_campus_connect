@@ -5,6 +5,11 @@ export const createEvent = async (req, res) => {
     try {
         const { title, description, date, location, creatorId } = req.body;
 
+        // RBAC: Only Admin, Faculty, or Moderator can create events
+        if (!['admin', 'faculty', 'moderator'].includes(req.user.role)) {
+            return res.status(403).json({ message: "Access denied. You do not have permission to create an event." });
+        }
+
         let filePath = null;
         let originalFileName = null;
 

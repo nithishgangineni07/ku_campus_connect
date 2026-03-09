@@ -31,7 +31,7 @@ const Login = () => {
             <Card variant="glass" className="w-full  max-w-md p-8 relative z-10 m-4">
                 <div className="text-center mb-8">
                     <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-secondary-600">Welcome Back</h2>
-                    <p className="text-gray-500 mt-2">Sign in to continue to Campus Connect</p>
+                    <p className="text-gray-500 dark:text-white mt-2">Sign in to continue to Campus Connect</p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -70,13 +70,13 @@ const Login = () => {
                     </Button>
                 </form>
 
-                <div className="mt-6 text-center text-sm text-gray-500">
+                <div className="mt-6 text-center text-sm text-gray-500 dark:text-white">
                     Don't have an account?{' '}
                     <Link to="/register" className="font-semibold text-primary-600 hover:text-primary-700 hover:underline">
                         Create account
                     </Link>
                 </div>
-                <div className="mt-6 text-center text-xs text-gray-400">
+                <div className="mt-6 text-center text-xs text-gray-400 dark:text-white">
                     <Link to="/admin-login" className="hover:text-primary-600 transition-colors">
                         Admin Portal
                     </Link>

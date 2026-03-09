@@ -40,7 +40,7 @@ const FacultyLogin = () => {
             <Card variant="glass" className="w-full  max-w-md p-8 relative z-10 m-4">
                 <div className="text-center mb-8">
                     <h2 className="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-600">Faculty Portal</h2>
-                    <p className="text-gray-300 mt-2">Sign in to manage courses and groups</p>
+                    <p className="text-gray-300 dark:text-white mt-2">Sign in to manage courses and groups</p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">
@@ -51,8 +51,8 @@ const FacultyLogin = () => {
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="professor@university.edu"
                         required
-                        className="text-gray-900"
-                        labelClassName="text-gray-200"
+                        className="text-gray-900 dark:text-white"
+                        labelClassName="text-gray-200 dark:text-white"
                     />
 
                     <div className="space-y-1">
@@ -63,8 +63,8 @@ const FacultyLogin = () => {
                             onChange={(e) => setPassword(e.target.value)}
                             placeholder="••••••••"
                             required
-                            className="text-gray-900"
-                            labelClassName="text-gray-200"
+                            className="text-gray-900 dark:text-white"
+                            labelClassName="text-gray-200 dark:text-white"
                         />
                         <div className="flex justify-end">
                             <Link to="/forgot-password" className="text-sm text-purple-300 hover:text-purple-200 font-medium">
@@ -83,7 +83,7 @@ const FacultyLogin = () => {
                     </Button>
                 </form>
 
-                <div className="mt-6 text-center text-sm text-gray-300">
+                <div className="mt-6 text-center text-sm text-gray-300 dark:text-white">
                     Not a faculty member?{' '}
                     <Link to="/login" className="font-semibold text-white hover:underline">
                         Student Login

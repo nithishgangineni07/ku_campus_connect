@@ -6,7 +6,7 @@ import CreatePost from './CreatePost';
 
 const PostFeed = () => {
     const [posts, setPosts] = useState([]);
-    const { token } = useAuth();
+    const { token, user } = useAuth();
 
     const fetchPosts = async () => {
         try {
@@ -25,13 +25,15 @@ const PostFeed = () => {
 
     return (
         <div className="max-w-2xl mx-auto p-4">
-            <CreatePost onPostCreated={fetchPosts} />
+            {['admin', 'faculty', 'moderator'].includes(user?.role) && (
+                <CreatePost onPostCreated={fetchPosts} />
+            )}
             <div className="space-y-4">
                 {posts.map(post => (
                     <PostCard key={post._id} post={post} />
                 ))}
                 {posts.length === 0 && (
-                    <div className="text-center text-gray-500 py-10">No posts yet. Be the first to post!</div>
+                    <div className="text-center text-gray-500 dark:text-white py-10">No posts yet. Be the first to post!</div>
                 )}
             </div>
         </div>

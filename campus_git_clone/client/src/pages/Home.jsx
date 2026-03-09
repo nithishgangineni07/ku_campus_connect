@@ -6,6 +6,7 @@ import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
 import LeftSidebar from '../components/LeftSidebar';
 import MobileNavbar from '../components/MobileNavbar';
+import DesktopHeader from '../components/DesktopHeader';
 
 const Home = () => {
     const { user } = useAuth();
@@ -13,7 +14,8 @@ const Home = () => {
 
     if (user) {
         return (
-            <div className="min-h-screen bg-slate-50">
+            <div className="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
+                <DesktopHeader />
                 <MobileNavbar onOpenSidebar={() => setIsSidebarOpen(true)} />
 
                 <div className="flex max-w-7xl mx-auto">
@@ -31,7 +33,7 @@ const Home = () => {
     }
 
     return (
-        <div className="min-h-screen bg-slate-50 flex flex-col relative overflow-hidden">
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-300 flex flex-col relative overflow-hidden">
             {/* Decorative Background Elements */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
                 <div className="absolute -top-20 -left-20 w-96 h-96 bg-primary-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
@@ -55,11 +57,11 @@ const Home = () => {
                 <div className="inline-block px-4 py-1.5 mb-6 rounded-full bg-primary-50 border border-primary-100 text-primary-700 text-sm font-medium animate-fade-in-up">
                     🚀 The #1 Social Platform for Students
                 </div>
-                <h1 className="text-5xl md:text-7xl font-display font-bold text-gray-900 mb-6 leading-tight animate-fade-in-up animation-delay-100">
+                <h1 className="text-5xl md:text-7xl font-display font-bold text-gray-900 dark:text-white mb-6 leading-tight animate-fade-in-up animation-delay-100">
                     Connect, Collaborate, <br />
                     <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-secondary-600">Create Together.</span>
                 </h1>
-                <p className="text-xl text-gray-600 mb-10 max-w-2xl mx-auto leading-relaxed animate-fade-in-up animation-delay-200">
+                <p className="text-xl text-gray-600 dark:text-white mb-10 max-w-2xl mx-auto leading-relaxed animate-fade-in-up animation-delay-200">
                     Join the digital campus community where ideas flow, projects come to life, and friendships begin. Your campus life, amplified.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 animate-fade-in-up animation-delay-300">
@@ -79,22 +81,22 @@ const Home = () => {
                     <Card variant="glass" className="p-6 text-left">
                         <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center text-2xl mb-4">💬</div>
                         <h3 className="text-xl font-bold mb-2">Real-time Chat</h3>
-                        <p className="text-gray-600">Connect instantly with peers and faculty members.</p>
+                        <p className="text-gray-600 dark:text-white">Connect instantly with peers and faculty members.</p>
                     </Card>
                     <Card variant="glass" className="p-6 text-left">
                         <div className="w-12 h-12 rounded-lg bg-purple-100 flex items-center justify-center text-2xl mb-4">📅</div>
                         <h3 className="text-xl font-bold mb-2">Events & Groups</h3>
-                        <p className="text-gray-600">Discover campus events and join interest groups.</p>
+                        <p className="text-gray-600 dark:text-white">Discover campus events and join interest groups.</p>
                     </Card>
                     <Card variant="glass" className="p-6 text-left">
                         <div className="w-12 h-12 rounded-lg bg-green-100 flex items-center justify-center text-2xl mb-4">📚</div>
                         <h3 className="text-xl font-bold mb-2">Resource Sharing</h3>
-                        <p className="text-gray-600">Share notes, projects, and study materials easily.</p>
+                        <p className="text-gray-600 dark:text-white">Share notes, projects, and study materials easily.</p>
                     </Card>
                 </div>
             </main>
 
-            <footer className="relative z-10 py-8 text-center text-gray-500 text-sm mt-20 border-t border-gray-200">
+            <footer className="relative z-10 py-8 text-center text-gray-500 dark:text-white text-sm mt-20 border-t border-gray-200">
                 <p>© 2026 Campus Connect. All rights reserved.</p>
             </footer>
         </div>

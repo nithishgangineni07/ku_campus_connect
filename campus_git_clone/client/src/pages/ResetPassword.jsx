@@ -39,8 +39,8 @@ const ResetPassword = () => {
             <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
             <Card variant="default" className="w-full max-w-md p-8 relative z-10 m-4">
                 <div className="text-center mb-6">
-                    <h2 className="text-2xl font-bold text-gray-900">Reset Password</h2>
-                    <p className="text-gray-500 mt-2">Enter your new password below.</p>
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Reset Password</h2>
+                    <p className="text-gray-500 dark:text-white mt-2">Enter your new password below.</p>
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-6">

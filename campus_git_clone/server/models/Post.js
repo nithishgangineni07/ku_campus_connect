@@ -12,6 +12,10 @@ const postSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    userRole: {
+        type: String,
+        default: 'student'
+    },
     userAvatar: String,
     description: String,
     picturePath: String,

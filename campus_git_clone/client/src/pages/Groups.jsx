@@ -8,6 +8,7 @@ import Button from '../components/ui/Button';
 import Input from '../components/ui/Input';
 import { useToast } from '../context/ToastContext';
 import MobileNavbar from '../components/MobileNavbar';
+import DesktopHeader from '../components/DesktopHeader';
 
 const Groups = () => {
     const [groups, setGroups] = useState([]);
@@ -100,7 +101,8 @@ const Groups = () => {
     };
 
     return (
-        <div className="min-h-screen bg-slate-50">
+        <div className="min-h-screen bg-slate-50 dark:bg-slate-900 transition-colors duration-300">
+            <DesktopHeader />
             <MobileNavbar onOpenSidebar={() => setIsSidebarOpen(true)} />
 
             <div className="flex max-w-7xl mx-auto">
@@ -109,7 +111,7 @@ const Groups = () => {
                 <main className="flex-1 min-w-0 p-4 md:p-8">
                     <div className="max-w-4xl mx-auto">
                         <div className="flex justify-between items-center mb-6">
-                            <h2 className="text-2xl font-bold text-gray-900">Communities</h2>
+                            <h2 className="text-2xl font-bold text-gray-900 dark:text-white">Communities</h2>
                             <Button onClick={() => setShowCreateModal(true)}>+ Create Group</Button>
                         </div>
 
@@ -131,12 +133,12 @@ const Groups = () => {
                                         <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-primary-100 to-secondary-100 flex items-center justify-center text-2xl">
                                             👥
                                         </div>
-                                        <span className={`text-xs px-2 py-1 rounded-full border ${group.privacy === 'public' ? 'bg-green-50 text-green-600 border-green-200' : 'bg-gray-50 text-gray-600 border-gray-200'}`}>
+                                        <span className={`text-xs px-2 py-1 rounded-full border ${group.privacy === 'public' ? 'bg-green-50 text-green-600 border-green-200' : 'bg-gray-50 text-gray-600 dark:text-white border-gray-200'}`}>
                                             {group.privacy}
                                         </span>
                                     </div>
-                                    <h3 onClick={() => navigate(`/groups/${group._id}`)} className="text-xl font-bold text-gray-900 mb-2 hover:text-primary-600 cursor-pointer">{group.name}</h3>
-                                    <p className="text-gray-600 text-sm mb-6 flex-1">{group.description}</p>
+                                    <h3 onClick={() => navigate(`/groups/${group._id}`)} className="text-xl font-bold text-gray-900 dark:text-white mb-2 hover:text-primary-600 cursor-pointer">{group.name}</h3>
+                                    <p className="text-gray-600 dark:text-white text-sm mb-6 flex-1">{group.description}</p>
 
                                     <div className="flex items-center justify-between mt-auto">
                                         <div className="flex -space-x-2">
@@ -145,7 +147,7 @@ const Groups = () => {
                                                 <div key={i} className="w-8 h-8 rounded-full bg-gray-200 border-2 border-white"></div>
                                             ))}
                                             {group.members.length > 3 && (
-                                                <div className="w-8 h-8 rounded-full bg-gray-100 border-2 border-white flex items-center justify-center text-xs text-gray-500 font-medium">
+                                                <div className="w-8 h-8 rounded-full bg-gray-100 border-2 border-white flex items-center justify-center text-xs text-gray-500 dark:text-white font-medium">
                                                     +{group.members.length - 3}
                                                 </div>
                                             )}
@@ -164,10 +166,10 @@ const Groups = () => {
                                     </div>
                                     <Button
                                         size="sm"
-                                        variant={group.members.some(m => m._id === user._id) ? "outline" : "primary"}
+                                        variant={group.members.some(m => m._id === user._id) ? "outline" : (group.pendingMembers && group.pendingMembers.some(m => m._id === user._id) ? "ghost" : "primary")}
                                         onClick={() => handleJoinGroup(group._id)}
                                     >
-                                        {group.members.some(m => m._id === user._id) ? 'Leave' : 'Join'}
+                                        {group.members.some(m => m._id === user._id) ? 'Leave' : (group.pendingMembers && group.pendingMembers.some(m => m._id === user._id) ? 'Cancel Request' : 'Join')}
                                     </Button>
                                 </Card>
                             ))}
@@ -190,7 +192,7 @@ const Groups = () => {
                                     required
                                 />
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-white mb-1">Description</label>
                                     <textarea
                                         className="w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
                                         rows="3"
@@ -200,7 +202,7 @@ const Groups = () => {
                                     ></textarea>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700 mb-1">Privacy</label>
+                                    <label className="block text-sm font-medium text-gray-700 dark:text-white mb-1">Privacy</label>
                                     <select
                                         className="w-full rounded-lg border-gray-300 shadow-sm focus:border-primary-500 focus:ring-primary-500"
                                         value={privacy}
@@ -229,7 +231,7 @@ const Groups = () => {
                                 <h3 className="text-xl font-bold">Members of {selectedGroupForMembers.name}</h3>
                                 <button
                                     onClick={() => setShowMembersModal(false)}
-                                    className="text-gray-400 hover:text-gray-600"
+                                    className="text-gray-400 dark:text-white hover:text-gray-600 dark:text-white"
                                 >
                                     ✕
                                 </button>
@@ -243,11 +245,11 @@ const Groups = () => {
                                                     {(member.name || member.username) ? (member.name || member.username)[0].toUpperCase() : '?'}
                                                 </div>
                                                 <div>
-                                                    <p className="font-semibold text-gray-900">
+                                                    <p className="font-semibold text-gray-900 dark:text-white">
                                                         {member.name || member.username}
-                                                        {member.rollNumber && <span className="text-gray-500 font-normal ml-1">({member.rollNumber})</span>}
+                                                        {member.rollNumber && <span className="text-gray-500 dark:text-white font-normal ml-1">({member.rollNumber})</span>}
                                                     </p>
-                                                    <p className="text-sm text-gray-500">{member.email || ''}</p>
+                                                    <p className="text-sm text-gray-500 dark:text-white">{member.email || ''}</p>
                                                 </div>
                                             </div>
 
@@ -262,7 +264,7 @@ const Groups = () => {
                                         </div>
                                     ))
                                 ) : (
-                                    <p className="text-center text-gray-500 py-4">No members yet.</p>
+                                    <p className="text-center text-gray-500 dark:text-white py-4">No members yet.</p>
                                 )}
                             </div>
                             <div className="flex justify-end mt-6 pt-4 border-t border-gray-100">
