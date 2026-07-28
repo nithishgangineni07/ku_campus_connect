@@ -13,7 +13,10 @@ const userSchema = new mongoose.Schema({
         sparse: true,
         trim: true,
         minlength: 10,
-        maxlength: 10
+        maxlength: 10,
+        required: function () {
+        return this.role === "student";
+    }
     },
     department: {
         type: Array, // Strings of department names
