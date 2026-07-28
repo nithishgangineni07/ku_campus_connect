@@ -13,6 +13,57 @@ const Login = () => {
     const { login } = useAuth();
     const { showToast } = useToast();
     const navigate = useNavigate();
+    const [currentIndex, setCurrentIndex] = useState(0);
+
+
+    const dummyCredentials = [
+        {
+            email: "sanjana@gmail.com",
+            password: "123456",
+            role: "student"
+        },
+        {
+            email: "ashok@gmail.com",
+            password: "123456",
+            role: "faculty"
+        },
+        {
+            email: "rajureddy10@gmail.com",
+            password: "123456",
+            role: "faculty"
+        },
+        {
+            email: "krupa@gmail.com",
+            password: "123456",
+            role: "moderator"
+        },
+        {
+            email: "tanisha@gmail.com",
+            password: "123456",
+            role: "student"
+        },
+    ];
+
+    //left and right logic
+
+    const nextCredential = () => {
+        setCurrentIndex((prev) => (prev + 1) % dummyCredentials.length);
+    };
+
+    const prevCredential = () => {
+        setCurrentIndex((prev) =>
+            prev == 0 ? dummyCredentials.length - 1 : prev - 1);
+    };
+
+    //logic for auto filling password on clicking dummy
+
+    const fillCredentials = () => {
+        setEmail(current.email);
+        setPassword(current.password);
+
+    };
+
+    const current = dummyCredentials[currentIndex];
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -58,6 +109,53 @@ const Login = () => {
                                 Forgot password?
                             </Link>
                         </div>
+                    </div>
+
+                    <div className="text-gray-500 mt-2 text-center">
+
+                        <h4>Dummy Credentials</h4>
+
+                    </div>
+
+                    <div className="flex items-center justify-between bg-white border border-gray-300 rounded-lg shadow-sm overflow-hidden">
+
+
+
+                        {/* Left Arrow */}
+                        <button
+                            onClick={prevCredential}
+                            className="w-12 h-16 flex items-center justify-center border-r border-gray-300 hover:bg-blue-100 transition-all text-xl font-bold cursor-pointer"
+                        >
+                            ←
+                        </button>
+
+
+
+                        {/* Credentials */}
+                        <div
+                            onClick={fillCredentials}
+                            className="flex-1 px-4 py-2 text-center cursor-pointer hover:bg-gray-50"
+                        >
+
+                            <p>
+                                <span className="font-semibold">Email:</span> {current.email}
+                            </p>
+                            <p>
+                                <span className="font-semibold">Password:</span> {current.password}
+                            </p>
+                            <p>
+                                <span className="font-semibold">Role:</span> {current.role}
+                            </p>
+                        </div>
+
+                        {/* Right Arrow */}
+                        <button
+                            onClick={nextCredential}
+                            className="w-12 h-16 flex items-center justify-center border-l border-gray-300 hover:bg-blue-100 transition-all text-xl font-bold cursor-pointer"
+                        >
+                            →
+                        </button>
+
                     </div>
 
                     <Button
